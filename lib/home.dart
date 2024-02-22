@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:gap/gap.dart';
+import 'package:path_provider/path_provider.dart';
 
 ///
 typedef _Fn = void Function();
@@ -32,7 +35,7 @@ class SimpleRecorder extends StatefulWidget {
 
 class _SimpleRecorderState extends State<SimpleRecorder> {
   Codec _codec = Codec.aacMP4;
-  String _mPath = 'tau_file.mp4';
+  String _mPath = 'tua.mp4';
   FlutterSoundPlayer? _mPlayer = FlutterSoundPlayer();
   FlutterSoundRecorder? _mRecorder = FlutterSoundRecorder();
   bool _mPlayerIsInited = false;
@@ -52,6 +55,8 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
     openTheRecorder().then((value) {
       setState(() {
         _mRecorderIsInited = true;
+        // Directory? file = await getExternalStorageDirectory();
+        // _mPath = file!.path;
       });
     });
     super.initState();
@@ -123,7 +128,11 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
   void stopRecorder() async {
     await _mRecorder!.stopRecorder().then((value) {
       setState(() {
-        //var url = value;
+        // final data = jsonDecode(value!);
+        // final url = Uri.parse(data);
+        // File fil = File.fromUri(url);
+        // //var url = value;
+        // print(fil);
         _mplaybackReady = true;
       });
     });
@@ -213,9 +222,10 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
                       children: [
                         Icon(_mRecorder!.isRecording ? Icons.stop : Icons.mic),
                         Expanded(
-                            child: Text(_mRecorder!.isRecording
-                                ? 'Stop...'
-                                : "Recording."))
+                          child: Text(_mRecorder!.isRecording
+                              ? 'Stop...'
+                              : "Recording."),
+                        ),
                       ],
                     ))),
           ),
@@ -243,6 +253,15 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
               ),
             ),
           ),
+          // ElevatedButton(
+          //     onPressed: () async {
+          //       File filePath = File(_mPath);
+          //       File file = await filePath;
+          //       print(file.path);
+          //       if(file)
+          //       print(f);
+          //     },
+          //     child: Text('File')),
         ],
       ),
     );
